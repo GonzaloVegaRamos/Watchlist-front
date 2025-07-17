@@ -46,13 +46,22 @@ export default {
   },
   methods: {
     checkToken() {
-      const token = localStorage.getItem('token')
-      if (token) {
-        this.username = this.getUsernameFromToken(token)
+      const isDemo = import.meta.env.VITE_DEMO_MODE === 'true'
+
+      if (isDemo) {
+        // Simular un usuario para el modo demo
+        this.username = 'demo_user'
+        localStorage.setItem('token', 'fake.token.demo')
       } else {
-        this.username = null
+        const token = localStorage.getItem('token')
+        if (token) {
+          this.username = this.getUsernameFromToken(token)
+        } else {
+          this.username = null
+        }
       }
     },
+
     logout() {
       localStorage.removeItem('token')
       emitter.emit('logout')
